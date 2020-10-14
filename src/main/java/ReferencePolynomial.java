@@ -2,7 +2,6 @@ package main.java;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 public class ReferencePolynomial implements Polynomial {
@@ -39,28 +38,25 @@ public class ReferencePolynomial implements Polynomial {
         }
         CustomNode firstCustomNode = firstPolynomialList.getHead();
         CustomNode secondCustomNode = secondPolynomialList.getHead();
-
-        CustomNode lastCustomNode = null;
         while (firstCustomNode != null && secondCustomNode != null) {
             if (firstCustomNode.getPower() == secondCustomNode.getPower()) {
                 double sum = firstCustomNode.getCoefficient() + secondCustomNode.getCoefficient();
                 CustomNode newCustomNode = new CustomNode(sum, firstCustomNode.getPower());
-                sumLinkedList.add(newCustomNode, lastCustomNode, null);
-                lastCustomNode = newCustomNode;
+                sumLinkedList.append(newCustomNode);
+                firstCustomNode = firstCustomNode.getNextCustomNode();
+                secondCustomNode = secondCustomNode.getNextCustomNode();
             } else if (firstCustomNode.getPower() < secondCustomNode.getPower()) {
-                sumLinkedList.add(secondCustomNode, lastCustomNode, null);
-                lastCustomNode = secondCustomNode;
+                sumLinkedList.append(secondCustomNode);
                 secondCustomNode = secondCustomNode.getNextCustomNode();
             } else {
-                sumLinkedList.add(firstCustomNode, lastCustomNode, null);
-                lastCustomNode = secondCustomNode;
+                sumLinkedList.append(firstCustomNode);
                 firstCustomNode = firstCustomNode.getNextCustomNode();
             }
         }
         if (firstCustomNode != null) {
-            lastCustomNode.setNextCustomNode(firstCustomNode);
+            sumLinkedList.append(firstCustomNode);
         } else if (secondCustomNode != null) {
-            lastCustomNode.setNextCustomNode(secondCustomNode);
+            sumLinkedList.append(secondCustomNode);
         }
 
         return new ReferencePolynomial(sumLinkedList);
@@ -93,7 +89,7 @@ public class ReferencePolynomial implements Polynomial {
                 int newPower = power + secondPolynomialCurrentNode.getPower();
                 double newCofficient = coefficient * secondPolynomialCurrentNode.getCoefficient();
                 CustomNode newNode = new CustomNode(newCofficient, newPower);
-                multLinkedList.add(newNode, previousNode, null);
+                multLinkedList.append(newNode);
                 previousNode = newNode;
                 secondPolynomialCurrentNode = secondPolynomialCurrentNode.getNextCustomNode();
             }
@@ -159,8 +155,7 @@ public class ReferencePolynomial implements Polynomial {
         }
         if (currentNode == null) {
             if (newCoefficient != 0)
-                polynomialCustomLinkedList.add(new CustomNode(newCoefficient, power),
-                        previousNode, null);
+                polynomialCustomLinkedList.append(new CustomNode(newCoefficient, power));
         } else if (currentNode.getPower() == power) {
             if (newCoefficient == 0) {
                 if (previousNode == null)

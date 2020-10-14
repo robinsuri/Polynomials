@@ -19,6 +19,7 @@ public class ReferencePolynomial implements Polynomial {
     public CustomLinkedList getPolynomialCustomLinkedList() {
         return polynomialCustomLinkedList;
     }
+
     @Override
     public int degree() {
         if (polynomialCustomLinkedList.getSize() == 0)
@@ -73,7 +74,7 @@ public class ReferencePolynomial implements Polynomial {
     public Polynomial mult(Polynomial p) {
         CustomLinkedList firstPolynomialLinkedList = this.polynomialCustomLinkedList;
         ReferencePolynomial secondPolynomial = (ReferencePolynomial) p;
-        CustomLinkedList secondPolynomialLinkedList = secondPolynomial.getPolynomialCustomLinkedList() ;
+        CustomLinkedList secondPolynomialLinkedList = secondPolynomial.getPolynomialCustomLinkedList();
 
         if (firstPolynomialLinkedList.isEmpty() || (firstPolynomialLinkedList.getSize() == 1
                 && firstPolynomialLinkedList.getHead().getCoefficient() == 0))
@@ -84,12 +85,12 @@ public class ReferencePolynomial implements Polynomial {
             return new ReferencePolynomial();
 
         CustomNode firstPolynomialCurrentNode = firstPolynomialLinkedList.getHead();
-        CustomNode secondPolynomialCurrentNode = secondPolynomialLinkedList.getHead();
+        CustomNode secondPolynomialCurrentNode;
 
         Set<CustomLinkedList> multLinkedListSet = new HashSet<>();
         while (firstPolynomialCurrentNode != null) {
             int power = firstPolynomialCurrentNode.getPower();
-             secondPolynomialCurrentNode = secondPolynomialLinkedList.getHead();
+            secondPolynomialCurrentNode = secondPolynomialLinkedList.getHead();
             double coefficient = firstPolynomialCurrentNode.getCoefficient();
             CustomLinkedList multLinkedList = new CustomLinkedList(null);
             while (secondPolynomialCurrentNode != null) {
@@ -100,7 +101,7 @@ public class ReferencePolynomial implements Polynomial {
                 secondPolynomialCurrentNode = secondPolynomialCurrentNode.getNextCustomNode();
             }
             multLinkedListSet.add(multLinkedList);
-            firstPolynomialCurrentNode=firstPolynomialCurrentNode.getNextCustomNode();
+            firstPolynomialCurrentNode = firstPolynomialCurrentNode.getNextCustomNode();
         }
 
         Iterator itr = multLinkedListSet.iterator();

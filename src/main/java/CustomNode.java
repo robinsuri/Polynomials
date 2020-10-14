@@ -12,7 +12,7 @@ public class CustomNode {
     }
 
     public CustomNode(double coefficient, int power) {
-        this.coefficient=coefficient;
+        this.coefficient = coefficient;
         this.power = power;
     }
 
@@ -26,10 +26,6 @@ public class CustomNode {
 
     public int getPower() {
         return power;
-    }
-
-    public void setPower(int power) {
-        this.power = power;
     }
 
     public CustomNode getNextCustomNode() {

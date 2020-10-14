@@ -1,10 +1,17 @@
 package main.java;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 public class ReferencePolynomial implements Polynomial {
+
+
     private CustomLinkedList polynomialCustomLinkedList;
 
     public ReferencePolynomial() {
-        polynomialCustomLinkedList = new CustomLinkedList(null, 0);
+        polynomialCustomLinkedList = new CustomLinkedList(null);
     }
 
     public ReferencePolynomial(CustomLinkedList polynomialCustomLinkedList) {
@@ -20,18 +27,92 @@ public class ReferencePolynomial implements Polynomial {
 
     @Override
     public Polynomial add(Polynomial p) {
-        
+        ReferencePolynomial referencePolynomial = (ReferencePolynomial) p;
+        CustomLinkedList firstPolynomialList = this.polynomialCustomLinkedList;
+        CustomLinkedList secondPolynomialList = referencePolynomial.polynomialCustomLinkedList;
+        CustomLinkedList sumLinkedList = new CustomLinkedList(null);
+        if (firstPolynomialList == null) {
+            return new ReferencePolynomial(secondPolynomialList);
+        }
+        if (secondPolynomialList == null) {
+            return new ReferencePolynomial(firstPolynomialList);
+        }
+        CustomNode firstCustomNode = firstPolynomialList.getHead();
+        CustomNode secondCustomNode = secondPolynomialList.getHead();
+
+        CustomNode lastCustomNode = null;
+        while (firstCustomNode != null && secondCustomNode != null) {
+            if (firstCustomNode.getPower() == secondCustomNode.getPower()) {
+                double sum = firstCustomNode.getCoefficient() + secondCustomNode.getCoefficient();
+                CustomNode newCustomNode = new CustomNode(sum, firstCustomNode.getPower());
+                sumLinkedList.add(newCustomNode, lastCustomNode, null);
+                lastCustomNode = newCustomNode;
+            } else if (firstCustomNode.getPower() < secondCustomNode.getPower()) {
+                sumLinkedList.add(secondCustomNode, lastCustomNode, null);
+                lastCustomNode = secondCustomNode;
+                secondCustomNode = secondCustomNode.getNextCustomNode();
+            } else {
+                sumLinkedList.add(firstCustomNode, lastCustomNode, null);
+                lastCustomNode = secondCustomNode;
+                firstCustomNode = firstCustomNode.getNextCustomNode();
+            }
+        }
+        if (firstCustomNode != null) {
+            lastCustomNode.setNextCustomNode(firstCustomNode);
+        } else if (secondCustomNode != null) {
+            lastCustomNode.setNextCustomNode(secondCustomNode);
+        }
+
+        return new ReferencePolynomial(sumLinkedList);
     }
+
 
     @Override
     public Polynomial mult(Polynomial p) {
-        return null;
+        CustomLinkedList firstPolynomialLinkedList = this.polynomialCustomLinkedList;
+        CustomLinkedList secondPolynomialLinkedList = (CustomLinkedList) p;
+
+        if (firstPolynomialLinkedList == null || (firstPolynomialLinkedList.getSize() == 1
+                && firstPolynomialLinkedList.getHead().getCoefficient() == 0))
+            return new ReferencePolynomial(null);
+
+        else if (secondPolynomialLinkedList == null || (secondPolynomialLinkedList.getSize() == 1
+                && secondPolynomialLinkedList.getHead().getCoefficient() == 0))
+            return new ReferencePolynomial(null);
+
+        CustomNode firstPolynomialCurrentNode = firstPolynomialLinkedList.getHead();
+        CustomNode secondPolynomialCurrentNode = secondPolynomialLinkedList.getHead();
+
+        Set<CustomLinkedList> multLinkedListSet = new HashSet<>();
+        while (firstPolynomialCurrentNode != null) {
+            int power = firstPolynomialCurrentNode.getPower();
+            double coefficient = secondPolynomialCurrentNode.getCoefficient();
+            CustomNode previousNode = null;
+            CustomLinkedList multLinkedList = new CustomLinkedList(null);
+            while (secondPolynomialCurrentNode != null) {
+                int newPower = power + secondPolynomialCurrentNode.getPower();
+                double newCofficient = coefficient * secondPolynomialCurrentNode.getCoefficient();
+                CustomNode newNode = new CustomNode(newCofficient, newPower);
+                multLinkedList.add(newNode, previousNode, null);
+                previousNode = newNode;
+                secondPolynomialCurrentNode = secondPolynomialCurrentNode.getNextCustomNode();
+            }
+            multLinkedListSet.add(multLinkedList);
+        }
+
+        Iterator itr = multLinkedListSet.iterator();
+        ReferencePolynomial initialPolynomial = new ReferencePolynomial();
+        while (itr.hasNext()) {
+            CustomLinkedList multLinkedList = (CustomLinkedList) itr.next();
+            initialPolynomial.add(new ReferencePolynomial(multLinkedList));
+        }
+        return initialPolynomial;
     }
 
     @Override
     public void mult(double scalar) {
         if (scalar == 0) {
-            polynomialCustomLinkedList = new CustomLinkedList(null, 0);
+            polynomialCustomLinkedList = new CustomLinkedList(null);
             return;
         }
         CustomNode currentNode = polynomialCustomLinkedList.getHead();
@@ -85,7 +166,7 @@ public class ReferencePolynomial implements Polynomial {
                 if (previousNode == null)
                     polynomialCustomLinkedList.removeHead();
                 else
-                    polynomialCustomLinkedList.remove(currentNode,previousNode);
+                    polynomialCustomLinkedList.remove(currentNode, previousNode);
                 return;
             }
             currentNode.setCoefficient(newCoefficient);
@@ -107,8 +188,7 @@ public class ReferencePolynomial implements Polynomial {
         int power = head.getPower();
         double value = coefficient * Math.pow(x, power);
         CustomNode nextNode = head.getNextCustomNode();
-        Polynomial polynomial = new ReferencePolynomial(new CustomLinkedList(nextNode,
-                polynomialCustomLinkedList.getSize() - 1));
+        Polynomial polynomial = new ReferencePolynomial(new CustomLinkedList(nextNode));
         return value + polynomial.evaluate(x);
     }
 

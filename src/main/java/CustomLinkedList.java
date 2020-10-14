@@ -2,11 +2,9 @@ package main.java;
 
 public class CustomLinkedList {
     private CustomNode head;
-    private int size;
 
-    public CustomLinkedList(CustomNode head, int size) {
+    public CustomLinkedList(CustomNode head) {
         this.head = head;
-        this.size = size;
     }
 
     public CustomNode getHead() {
@@ -16,44 +14,39 @@ public class CustomLinkedList {
     public void setHead(CustomNode head) {
         this.head = head;
     }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public void add(CustomNode newNode, CustomNode previousNode, CustomNode nextNode) {
         if (previousNode != null)
             previousNode.setNextCustomNode(newNode);
         newNode.setNextCustomNode(nextNode);
         if (previousNode == null)
             head = newNode;
-        size++;
     }
 
     public void addHead(CustomNode customNode) {
         head = customNode;
-        size++;
     }
 
     public void removeHead() {
         head = head.getNextCustomNode();
-        size--;
-
     }
   // remove the currenNode from the list
     public void remove(CustomNode currentNode, CustomNode previousNode) {
         if(previousNode==null) {
             head = currentNode.getNextCustomNode();
-            size--;
         }
         else {
             previousNode.setNextCustomNode(currentNode.getNextCustomNode());
-            size--;
         }
 
+    }
+
+    public int getSize() {
+        int size=0;
+        CustomNode currentNode = head;
+        while(currentNode!=null){
+            size++;
+            currentNode = currentNode.getNextCustomNode();
+        }
+        return size;
     }
 }

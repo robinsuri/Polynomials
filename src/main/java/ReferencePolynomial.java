@@ -20,7 +20,7 @@ public class ReferencePolynomial implements Polynomial {
 
     @Override
     public Polynomial add(Polynomial p) {
-        return null;
+        
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ReferencePolynomial implements Polynomial {
                 if (previousNode == null)
                     polynomialCustomLinkedList.removeHead();
                 else
-                    previousNode.setNextCustomNode(currentNode.getNextCustomNode());
+                    polynomialCustomLinkedList.remove(currentNode,previousNode);
                 return;
             }
             currentNode.setCoefficient(newCoefficient);

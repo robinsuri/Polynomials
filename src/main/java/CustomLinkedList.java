@@ -44,4 +44,16 @@ public class CustomLinkedList {
         size--;
 
     }
+  // remove the currenNode from the list
+    public void remove(CustomNode currentNode, CustomNode previousNode) {
+        if(previousNode==null) {
+            head = currentNode.getNextCustomNode();
+            size--;
+        }
+        else {
+            previousNode.setNextCustomNode(currentNode.getNextCustomNode());
+            size--;
+        }
+
+    }
 }

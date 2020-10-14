@@ -64,4 +64,7 @@ public class CustomLinkedList {
         }
         lastNode.setNextCustomNode(newNode);
     }
+    public boolean isEmpty(){
+        return head==null;
+    }
 }

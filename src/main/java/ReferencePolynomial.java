@@ -6,7 +6,6 @@ import java.util.Set;
 
 public class ReferencePolynomial implements Polynomial {
 
-
     private CustomLinkedList polynomialCustomLinkedList;
 
     public ReferencePolynomial() {
@@ -17,6 +16,9 @@ public class ReferencePolynomial implements Polynomial {
         this.polynomialCustomLinkedList = polynomialCustomLinkedList;
     }
 
+    public CustomLinkedList getPolynomialCustomLinkedList() {
+        return polynomialCustomLinkedList;
+    }
     @Override
     public int degree() {
         if (polynomialCustomLinkedList.getSize() == 0)
@@ -38,18 +40,22 @@ public class ReferencePolynomial implements Polynomial {
         }
         CustomNode firstCustomNode = firstPolynomialList.getHead();
         CustomNode secondCustomNode = secondPolynomialList.getHead();
+        CustomNode newCustomNode;
         while (firstCustomNode != null && secondCustomNode != null) {
             if (firstCustomNode.getPower() == secondCustomNode.getPower()) {
                 double sum = firstCustomNode.getCoefficient() + secondCustomNode.getCoefficient();
-                CustomNode newCustomNode = new CustomNode(sum, firstCustomNode.getPower());
-                sumLinkedList.append(newCustomNode);
+                newCustomNode = new CustomNode(sum, firstCustomNode.getPower());
+                if (sum != 0)
+                    sumLinkedList.append(newCustomNode);
                 firstCustomNode = firstCustomNode.getNextCustomNode();
                 secondCustomNode = secondCustomNode.getNextCustomNode();
             } else if (firstCustomNode.getPower() < secondCustomNode.getPower()) {
-                sumLinkedList.append(secondCustomNode);
+                newCustomNode = new CustomNode(secondCustomNode.getCoefficient(), secondCustomNode.getPower());
+                sumLinkedList.append(newCustomNode);
                 secondCustomNode = secondCustomNode.getNextCustomNode();
             } else {
-                sumLinkedList.append(firstCustomNode);
+                newCustomNode = new CustomNode(firstCustomNode.getCoefficient(), firstCustomNode.getPower());
+                sumLinkedList.append(newCustomNode);
                 firstCustomNode = firstCustomNode.getNextCustomNode();
             }
         }
@@ -66,7 +72,8 @@ public class ReferencePolynomial implements Polynomial {
     @Override
     public Polynomial mult(Polynomial p) {
         CustomLinkedList firstPolynomialLinkedList = this.polynomialCustomLinkedList;
-        CustomLinkedList secondPolynomialLinkedList = (CustomLinkedList) p;
+        ReferencePolynomial secondPolynomial = (ReferencePolynomial) p;
+        CustomLinkedList secondPolynomialLinkedList = secondPolynomial.getPolynomialCustomLinkedList() ;
 
         if (firstPolynomialLinkedList == null || (firstPolynomialLinkedList.getSize() == 1
                 && firstPolynomialLinkedList.getHead().getCoefficient() == 0))
@@ -83,14 +90,12 @@ public class ReferencePolynomial implements Polynomial {
         while (firstPolynomialCurrentNode != null) {
             int power = firstPolynomialCurrentNode.getPower();
             double coefficient = secondPolynomialCurrentNode.getCoefficient();
-            CustomNode previousNode = null;
             CustomLinkedList multLinkedList = new CustomLinkedList(null);
             while (secondPolynomialCurrentNode != null) {
                 int newPower = power + secondPolynomialCurrentNode.getPower();
                 double newCofficient = coefficient * secondPolynomialCurrentNode.getCoefficient();
                 CustomNode newNode = new CustomNode(newCofficient, newPower);
                 multLinkedList.append(newNode);
-                previousNode = newNode;
                 secondPolynomialCurrentNode = secondPolynomialCurrentNode.getNextCustomNode();
             }
             multLinkedListSet.add(multLinkedList);
@@ -218,7 +223,7 @@ public class ReferencePolynomial implements Polynomial {
         while (currentNode != null) {
             coefficient = currentNode.getCoefficient();
             power = currentNode.getPower();
-            polynomial += (flag == true) ? "" : "+";
+            polynomial += (flag == true) ? "" : " + ";
             if (power == 1)
                 polynomial += String.format("%sx", coefficient);
             else if (power == 0)

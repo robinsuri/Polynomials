@@ -93,6 +93,7 @@ public class PolynomialDriver {
 
         // Test case 5.1: Test for add()
         // Set up polynomial p
+        showInfo(p);
         System.out.println("Test case 5.1: add()");
         p.setCoefficient(10.5, 1);
         p.setCoefficient(2.25, 5);

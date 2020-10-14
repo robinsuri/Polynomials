@@ -38,4 +38,10 @@ public class CustomLinkedList {
         head = customNode;
         size++;
     }
+
+    public void removeHead() {
+        head = head.getNextCustomNode();
+        size--;
+
+    }
 }

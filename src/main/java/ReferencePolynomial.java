@@ -30,6 +30,10 @@ public class ReferencePolynomial implements Polynomial {
 
     @Override
     public void mult(double scalar) {
+        if (scalar == 0) {
+            polynomialCustomLinkedList = new CustomLinkedList(null, 0);
+            return;
+        }
         CustomNode currentNode = polynomialCustomLinkedList.getHead();
         while (currentNode != null) {
             double currentCoefficient = currentNode.getCoefficient();
@@ -78,8 +82,10 @@ public class ReferencePolynomial implements Polynomial {
                         previousNode, null);
         } else if (currentNode.getPower() == power) {
             if (newCoefficient == 0) {
-                previousNode.setNextCustomNode(currentNode.getNextCustomNode());
-                currentNode = null;
+                if (previousNode == null)
+                    polynomialCustomLinkedList.removeHead();
+                else
+                    previousNode.setNextCustomNode(currentNode.getNextCustomNode());
                 return;
             }
             currentNode.setCoefficient(newCoefficient);
@@ -140,7 +146,7 @@ public class ReferencePolynomial implements Polynomial {
             polynomial += (flag == true) ? "" : "+";
             if (power == 1)
                 polynomial += String.format("%sx", coefficient);
-            if (power == 0)
+            else if (power == 0)
                 polynomial += String.format("%s", coefficient);
             else
                 polynomial += String.format("%sx^%s", coefficient, power);
